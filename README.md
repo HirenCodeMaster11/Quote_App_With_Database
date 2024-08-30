@@ -63,4 +63,7 @@ A new Flutter project.
 </div>
 <div align="center">
 <a href="https://github.com/HirenCodeMaster11/Quote_App_With_Database/blob/master/lib/View/TextEditing%20Page/txtEdit%20Page.dart">-> 📂 Go To Dart File 📂 <-</a>
-</div>
+</div><br>
+
+##Description : 
+```The Flutter Quote app allows users to explore and manage a wide array of categorized quotes. Users can select and filter quotes by categories, customize quote text styles, and edit colors using a smart color picker. The app features a favorites section with a folder structure for organizing liked quotes by category. Navigation is seamless, thanks to GetX for state management and routing. With a clean UI, users can easily ```
