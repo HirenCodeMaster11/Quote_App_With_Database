@@ -10,7 +10,7 @@ class ApiHelper
   ApiHelper._();
 
   Future<List<QuoteModal>?> fetchData({String? category}) async {
-    String apiData = "https://sheetdb.io/api/v1/wwuy3c8hslitp";
+    String apiData = "https://sheetdb.io/api/v1/vq4b4icwfowsh";
     Uri uri = Uri.parse(apiData);
     Response response = await http.get(uri);
 

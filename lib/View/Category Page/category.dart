@@ -14,9 +14,9 @@ class CategoryPage extends StatelessWidget {
     final QuotesController controller = Get.find<QuotesController>();
 
     return Scaffold(
-      backgroundColor: Color(0xff242D3C),
+      backgroundColor: const Color(0xff242D3C),
       appBar: AppBar(
-        backgroundColor: Color(0xff242D3C),
+        backgroundColor: const Color(0xff242D3C),
         leading: GestureDetector(
           onTap: () {
             Navigator.of(context).pop();
@@ -44,36 +44,36 @@ class CategoryPage extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xff344050),
+                  color: const Color(0xff344050),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Column(
                   children: [
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     controller.randomQuote();
-                    //     Navigator.of(context).pop();
-                    //   },
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.only(left: 14, right: 14, top: 12, bottom: 12),
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       children: [
-                    //         Text(
-                    //           'Random quotes',
-                    //           style: TextStyle(
-                    //             color: Colors.white,
-                    //             fontSize: w * 0.062,
-                    //           ),
-                    //         ),
-                    //         Icon(
-                    //           CupertinoIcons.right_chevron,
-                    //           color: Colors.white,
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
+                    GestureDetector(
+                      onTap: () {
+                        // Navigator.of(context).pop();
+                        Navigator.of(context).pushNamed('/fav');
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 14, right: 14, top: 12, bottom: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Favorite quotes',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: w * 0.062,
+                              ),
+                            ),
+                            Icon(
+                              CupertinoIcons.right_chevron,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -90,14 +90,7 @@ class CategoryPage extends StatelessWidget {
               _buildCategorySection(
                 context,
                 null,
-                [
-                  'Love',
-                  'Affirmation',
-                  'Motivation',
-                  'Deep',
-                  'Positive thinking',
-                  'Mental health',
-                ],
+                ['Love', 'Affirmation', 'Motivation', 'Deep'],
                 controller,
               ),
               SizedBox(height: h * 0.02),
@@ -113,10 +106,7 @@ class CategoryPage extends StatelessWidget {
               _buildCategorySection(
                 context,
                 null,
-                [
-                  'Sadness',
-                  'Heartbroken',
-                ],
+                ['Sad', 'Broken'],
                 controller,
               ),
               SizedBox(height: h * 0.02),
@@ -132,14 +122,7 @@ class CategoryPage extends StatelessWidget {
               _buildCategorySection(
                 context,
                 null,
-                [
-                  'Self-esteem',
-                  'Positive thinking',
-                  'Happiness',
-                  'Gratitude',
-                  'Ego',
-                  'Mental health',
-                ],
+                ['Self Esteem', 'Positive', 'Happy', 'Gratitude', 'Ego', 'Mental Health'],
                 controller,
               ),
               SizedBox(height: h * 0.02),
@@ -155,11 +138,7 @@ class CategoryPage extends StatelessWidget {
               _buildCategorySection(
                 context,
                 null,
-                [
-                  'Hope',
-                  'Patience',
-                  'Smile',
-                ],
+                ['Hope', 'Patience'],
                 controller,
               ),
               SizedBox(height: h * 0.02),
@@ -175,12 +154,7 @@ class CategoryPage extends StatelessWidget {
               _buildCategorySection(
                 context,
                 null,
-                [
-                  'Success',
-                  'Discipline',
-                  'Smile',
-                  'Loyalty',
-                ],
+                ['Success', 'Discipline', 'Loyalty'],
                 controller,
               ),
               SizedBox(height: h * 0.02),
@@ -196,11 +170,7 @@ class CategoryPage extends StatelessWidget {
               _buildCategorySection(
                 context,
                 null,
-                [
-                  'Friendship',
-                  'Kindness',
-                  'Funny',
-                ],
+                ['Friendship', 'Kindness', 'Funny'],
                 controller,
               ),
               SizedBox(height: h * 0.02),
@@ -232,7 +202,7 @@ class CategoryPage extends StatelessWidget {
         SizedBox(height: 10),
         Container(
           decoration: BoxDecoration(
-            color: Color(0xff344050),
+            color: const Color(0xff344050),
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
@@ -255,7 +225,7 @@ class CategoryPage extends StatelessWidget {
                             fontSize: w * 0.062,
                           ),
                         ),
-                        Icon(
+                        const Icon(
                           CupertinoIcons.right_chevron,
                           color: Colors.white,
                         ),

@@ -1,12 +1,15 @@
-import 'dart:math';
+import 'dart:ui';
 
+import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quote_app_with_database/Api%20Helper/api.dart';
-import 'package:quote_app_with_database/Database/database.dart';
-import 'package:quote_app_with_database/Modal/modal.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:quote_app_with_database/utils/textColor.dart';
+import '../Api Helper/api.dart';
+import '../Database/database.dart';
+import '../Modal/modal.dart';
 
 class QuotesController extends GetxController {
-
   var quotes = <QuoteModal>[].obs;
   var isLoading = false.obs;
   var likedQuotes = <QuoteModal>[].obs;
@@ -15,16 +18,9 @@ class QuotesController extends GetxController {
   RxInt screenIndex = 0.obs;
   String bgImage = 'assets/category images/Plain theme/3.jpg';
   RxList<String> selectCatList = <String>[].obs;
-
+  var selectedFont =GoogleFonts.lato();
+  Color selectedColor = Colors.white;
   final DatabaseHelper _databaseHelper = DatabaseHelper();
-
-  void changeIndex(int index) {
-    screenIndex.value = index;
-  }
-
-  void selectedTheme() {
-    update();
-  }
 
   void selectCategory(String category) {
     selectCatList.clear();
@@ -52,7 +48,6 @@ class QuotesController extends GetxController {
   void onInit() {
     super.onInit();
     fetchData();
-    // loadLikedQuotes();
   }
 
   void fetchData() async {
@@ -74,22 +69,40 @@ class QuotesController extends GetxController {
     }
   }
 
-  void fetchDataByCategory(String category) {
-    isLoading(true);
-    try {
-      List<QuoteModal> filteredQuotes = allQuotes.where((quote) => quote.category == category).toList();
-      quotes(filteredQuotes);
-    } catch (e) {
-      print('Error filtering data by category: $e');
-    } finally {
-      isLoading(false);
+  void toggleLike(QuoteModal quote, int index) async {
+    if (likedQuotes.any((liked) => liked.quote == quote.quote)) {
+      likedQuotes.removeWhere((liked) => liked.quote == quote.quote);
+      await _databaseHelper.deleteLikedQuote(quote.quote);
+    } else {
+      likedQuotes.add(quote);
+      await _databaseHelper.insertLikedQuote(quote);
     }
+
+    if (quotes[index].isLiked == "1") {
+      quotes[index].isLiked = "0";
+    } else {
+      quotes[index].isLiked = "1";
+    }
+    update();
+    quotes.refresh();
+    print(quotes[index].isLiked);
   }
 
-  void randomQuote()
-  {
-    RxList<QuoteModal> randomList =quotes;
-    randomList.shuffle();
-    quotes(randomList);
+  void loadLikedQuotes() async {
+    List<QuoteModal> likedQuotesFromDb = await _databaseHelper.getLikedQuotes();
+    likedQuotes.value = likedQuotesFromDb;
+  }
+
+  // Group liked quotes by category
+  Map<String, List<QuoteModal>> get likedQuotesByCategory {
+    var groupedQuotes = <String, List<QuoteModal>>{};
+    for (var quote in likedQuotes) {
+      if (groupedQuotes.containsKey(quote.category)) {
+        groupedQuotes[quote.category]!.add(quote);
+      } else {
+        groupedQuotes[quote.category] = [quote];
+      }
+    }
+    return groupedQuotes;
   }
 }

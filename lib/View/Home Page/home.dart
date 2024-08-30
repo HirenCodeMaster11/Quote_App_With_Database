@@ -8,14 +8,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double w = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
 
     final QuotesController controller = Get.find<QuotesController>();
 
@@ -23,11 +17,9 @@ class HomePage extends StatelessWidget {
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
-        }
-        else if (controller.quotes.isEmpty) {
+        } else if (controller.quotes.isEmpty) {
           return const Center(child: Text('No data available'));
-        }
-        else {
+        } else {
           return PageView.builder(
             scrollDirection: Axis.vertical,
             itemCount: controller.quotes.length,
@@ -52,8 +44,8 @@ class HomePage extends StatelessWidget {
                           children: [
                             Text(
                               quote.category,
-                              style: TextStyle(
-                                color: Colors.white,
+                              style: controller.selectedFont.copyWith(
+                                color: controller.selectedColor,
                                 fontSize: w * 0.1,
                               ),
                             ),
@@ -61,32 +53,33 @@ class HomePage extends StatelessWidget {
                             Text(
                               quote.quote,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: w * 0.096,
+                              style: controller.selectedFont.copyWith(
+                                color: controller.selectedColor,
+                                fontSize: w * 0.1,
                               ),
                             ),
                             SizedBox(height: h * 0.03),
                             Text(
                               quote.author,
                               textAlign: TextAlign.center,
-                              style: GoogleFonts.shantellSans(
-                                textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: w * 0.08,
-                                ),
+                              style: controller.selectedFont.copyWith(
+                                color: controller.selectedColor,
+                                fontSize: w * 0.1,
                               ),
                             ),
                             SizedBox(height: h * 0.1),
                             GestureDetector(
                               onTap: () {
-                                // Add functionality for like button
-                                // Example: controller.likeQuote(quote);
+                                controller.toggleLike(quote, index);
                               },
                               child: Icon(
-                                Icons.favorite_border,
+                                quote.isLiked == "1"
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: quote.isLiked == "1"
+                                    ? Colors.red
+                                    : Colors.white,
                                 size: w * 0.1,
-                                color: Colors.white,
                               ),
                             ),
                           ],
@@ -128,7 +121,7 @@ class HomePage extends StatelessWidget {
               heroTag: 3,
               backgroundColor: const Color(0xff404040),
               onPressed: () {
-                // Add functionality or navigation for this button
+                Navigator.of(context).pushNamed('/edt');
               },
               child: Icon(
                 Icons.text_fields_outlined,
