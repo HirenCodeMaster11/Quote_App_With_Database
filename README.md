@@ -66,4 +66,4 @@ A new Flutter project.
 </div><br>
 
 ## Description : 
-```The Flutter Quote app allows users to explore and manage a wide array of categorized quotes. Users can select and filter quotes by categories, customize quote text styles, and edit colors using a smart color picker. The app features a favorites section with a folder structure for organizing liked quotes by category. Navigation is seamless, thanks to GetX for state management and routing. With a clean UI, users can easily ```
+```The Flutter Quote app allows users to explore and manage a wide array of categorized quotes. Users can select and filter quotes by categories, customize quote text styles, and edit colors using a smart color picker. The app features a favorites section with a folder structure for organizing liked quotes by category. Navigation is seamless, thanks to GetX for state management and routing. With a clean UI, users can easily find inspiration, save their favorite quotes, and enjoy a personalized quote experience. ```
