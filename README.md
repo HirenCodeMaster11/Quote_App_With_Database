@@ -40,8 +40,7 @@ A new Flutter project.
 <h2 align="center">5. Quote App Favorite Screen </h2>
 
 <div align="center">
-  <img height="550"  src="https://github.com/user-attachments/assets/6f8d3fc1-607f-4ae5-869d-099882d142ab" />
-  <img height="550"  src="https://github.com/user-attachments/assets/0467c6e7-e12f-4e2f-8d20-b5da5f297309" />
+  <img height="550"  src="https://github.com/user-attachments/assets/520db120-4e28-4119-96bf-e52caf2e621a" />
 </div>
 <div align="center">
 <a href="https://github.com/HirenCodeMaster11/Quote_App_With_Database/blob/master/lib/View/Favorite%20Page/favorite.dart">-> 📂 Go To Dart File 📂 <-</a>
