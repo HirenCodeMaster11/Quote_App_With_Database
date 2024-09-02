@@ -103,7 +103,7 @@ class ThemePage extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 10.0),
                   child: GestureDetector(
                     onTap: () {
-                      controller.bgImage = images[index];
+                      controller.selectedTheme(images[index]);
                       Navigator.of(context).pop();
                     },
                     child: Container(

@@ -11,8 +11,6 @@ class HomePage extends StatelessWidget {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
 
-    final QuotesController controller = Get.find<QuotesController>();
-
     return Scaffold(
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -27,63 +25,61 @@ class HomePage extends StatelessWidget {
               final quote = controller.quotes[index];
               return Stack(
                 children: [
-                  Center(
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage(controller.bgImage),
-                        ),
+                  Container(
+                    alignment: Alignment.center,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage(controller.bgImage),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              quote.category,
-                              style: controller.selectedFont.copyWith(
-                                color: controller.selectedColor,
-                                fontSize: w * 0.1,
-                              ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            quote.category,
+                            style: controller.selectedFont.copyWith(
+                              color: controller.selectedColor,
+                              fontSize: w * 0.1,
                             ),
-                            SizedBox(height: h * 0.04),
-                            Text(
-                              quote.quote,
-                              textAlign: TextAlign.center,
-                              style: controller.selectedFont.copyWith(
-                                color: controller.selectedColor,
-                                fontSize: w * 0.1,
-                              ),
+                          ),
+                          SizedBox(height: h * 0.04),
+                          Text(
+                            quote.quote,
+                            textAlign: TextAlign.center,
+                            style: controller.selectedFont.copyWith(
+                              color: controller.selectedColor,
+                              fontSize: w * 0.1,
                             ),
-                            SizedBox(height: h * 0.03),
-                            Text(
-                              quote.author,
-                              textAlign: TextAlign.center,
-                              style: controller.selectedFont.copyWith(
-                                color: controller.selectedColor,
-                                fontSize: w * 0.1,
-                              ),
+                          ),
+                          SizedBox(height: h * 0.03),
+                          Text(
+                            quote.author,
+                            textAlign: TextAlign.center,
+                            style: controller.selectedFont.copyWith(
+                              color: controller.selectedColor,
+                              fontSize: w * 0.1,
                             ),
-                            SizedBox(height: h * 0.1),
-                            GestureDetector(
+                          ),
+                          SizedBox(height: h * 0.05),
+                          GestureDetector(
                               onTap: () {
-                                controller.toggleLike(quote, index);
+                                controller.insertFavouriteQuotes(controller.allQuotes[index],index);
                               },
                               child: Icon(
-                                quote.isLiked == "1"
+                                quote.isLiked == '1'
                                     ? Icons.favorite
                                     : Icons.favorite_border,
-                                color: quote.isLiked == "1"
+                                color: quote.isLiked == '1'
                                     ? Colors.red
                                     : Colors.white,
                                 size: w * 0.1,
                               ),
                             ),
-                          ],
-                        ),
+                        ],
                       ),
                     ),
                   ),
@@ -135,3 +131,5 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+final QuotesController controller = Get.find<QuotesController>();

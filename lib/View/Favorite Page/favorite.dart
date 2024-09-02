@@ -1,21 +1,18 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:quote_app_with_database/Modal/modal.dart';
 
-import '../../Controller/controller.dart';
-import '../../Modal/modal.dart';
+import '../Home Page/home.dart';
 
-class FavoritePage extends StatelessWidget {
-  const FavoritePage({super.key});
+class LikedQuotesScreen extends StatelessWidget {
+  const LikedQuotesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-    final QuotesController controller = Get.find<QuotesController>();
     return Scaffold(
-      backgroundColor: Color(0xff242D3C),
+      backgroundColor: const Color(0xff242D3C),
       appBar: AppBar(
         backgroundColor: const Color(0xff242D3C),
         leading: GestureDetector(
@@ -29,7 +26,7 @@ class FavoritePage extends StatelessWidget {
           ),
         ),
         title: Text(
-          'Explore favorite quotes',
+          'Explore Favorite quotes',
           style: TextStyle(
             color: Colors.white,
             fontSize: w * 0.07,
@@ -37,172 +34,124 @@ class FavoritePage extends StatelessWidget {
           ),
         ),
       ),
-      body: Obx(() {
-        if (controller.likedQuotes.isEmpty) {
-          return Center(
-            child: Text(
-              'No liked quotes',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          );
-        } else {
-          var quotesByCategory = controller.likedQuotesByCategory;
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder(
-              itemCount: quotesByCategory.keys.length,
-              itemBuilder: (context, index) {
-                var category = quotesByCategory.keys.elementAt(index);
-                var quotes = quotesByCategory[category]!;
-                return Card(
-                  color: Color(0xff344050),
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: OpenContainer(
-                    transitionDuration: Duration(milliseconds: 500),
-                    openBuilder: (context, _) => FavoriteDetailPage(
-                        category: category, quotes: quotes),
-                    closedElevation: 0,
-                    openColor: Color(0xff344050),
-                    closedShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Obx(() {
+                if (controller.likedQuotes.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No favourite quotes added yet.',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white70,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
-                    closedColor: Theme.of(context).cardColor,
-                    closedBuilder: (context, openContainer) => ListTile(
-                      title: Text(
-                        category,
-                        style: controller.selectedFont.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                  );
+                }
+
+                // Group quotes by category
+                Map<String, List<QuoteModal>> groupedQuotes = {};
+                for (var quote in controller.likedQuotes) {
+                  if (groupedQuotes.containsKey(quote.category)) {
+                    groupedQuotes[quote.category]!.add(quote);
+                  } else {
+                    groupedQuotes[quote.category] = [quote];
+                  }
+                }
+
+                return ListView.builder(
+                  itemCount: groupedQuotes.keys.length,
+                  itemBuilder: (context, index) {
+                    String category = groupedQuotes.keys.elementAt(index);
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Card(
+                        elevation: 8,
+                        shadowColor: Colors.black38,
+                        color: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: ExpansionTile(
+                            backgroundColor: Color(0xff344050).withOpacity(0.4),
+                            collapsedBackgroundColor:
+                                Color(0xff344050),
+                            title: Text(
+                              category,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                                color: Colors.white,
+                              ),
+                            ),
+                            trailing: Icon(Icons.arrow_drop_down,color: Colors.white,),
+                            children: groupedQuotes[category]!.map((quote) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 4.0),
+                                padding: const EdgeInsets.all(12.0),
+                                decoration: BoxDecoration(
+                                  color: Color(0xff344050).withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xff344050).withOpacity(0.3),
+                                      spreadRadius: 1,
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: Text(
+                                    quote.quote,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      shadows: [
+                                        Shadow(
+                                          blurRadius: 5.0,
+                                          color: Colors.black38,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    '- ${quote.author}',
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                  trailing: IconButton(
+                                    onPressed: () {
+                                      controller.deleteFavouriteQuotes(quote.id!);
+                                    },
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
-                      trailing: Icon(Icons.arrow_forward_ios, color: Colors.black),
-                      onTap: openContainer,
-                    ),
-                  ),
+                    );
+                  },
                 );
-              },
+              }),
             ),
-          );
-        }
-      }),
-    );
-  }
-}
-
-class FavoriteDetailPage extends StatelessWidget {
-  final String category;
-  final List<QuoteModal> quotes;
-
-  const FavoriteDetailPage({
-    super.key,
-    required this.category,
-    required this.quotes,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final QuotesController controller = Get.find<QuotesController>();
-    double h = MediaQuery.of(context).size.height;
-    double w = MediaQuery.of(context).size.width;
-
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              controller.bgImage,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Positioned.fill(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 25),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Icon(
-                          Icons.close,
-                          size: w * 0.08,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(width: w * 0.1),
-                      Text(
-                        'My favorites',
-                        style: controller.selectedFont.copyWith(
-                          color: Colors.white,
-                          fontSize: w * 0.07,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: PageView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: quotes.length,
-                    itemBuilder: (context, index) {
-                      final quote = quotes[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              quote.category,
-                              style: controller.selectedFont.copyWith(
-                                color: Colors.white,
-                                fontSize: w * 0.1,
-                              ),
-                            ),
-                            SizedBox(height: h * 0.04),
-                            Text(
-                              quote.quote,
-                              textAlign: TextAlign.center,
-                              style: controller.selectedFont.copyWith(
-                                color: Colors.white,
-                                fontSize: w * 0.096,
-                              ),
-                            ),
-                            SizedBox(height: h * 0.03),
-                            Text(
-                              quote.author,
-                              textAlign: TextAlign.center,
-                              style: controller.selectedFont.copyWith(
-                                color: Colors.white,
-                                fontSize: w * 0.08,
-                              ),
-                            ),
-                            SizedBox(height: h * 0.1),
-                            GestureDetector(
-                              onTap: () {
-                                controller.toggleLike(quote, controller.likedQuotes.indexOf(quote));
-                                Navigator.of(context).pop();
-                              },
-                              child: Icon(
-                                Icons.delete,
-                                size: w * 0.1,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

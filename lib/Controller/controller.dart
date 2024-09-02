@@ -1,26 +1,29 @@
-import 'dart:ui';
-
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quote_app_with_database/utils/textColor.dart';
 import '../Api Helper/api.dart';
 import '../Database/database.dart';
 import '../Modal/modal.dart';
+import '../utils/textColor.dart';
 
 class QuotesController extends GetxController {
   var quotes = <QuoteModal>[].obs;
   var isLoading = false.obs;
   var likedQuotes = <QuoteModal>[].obs;
   var allQuotes = <QuoteModal>[].obs;
-  RxInt selectThemeIndex = 0.obs;
-  RxInt screenIndex = 0.obs;
   String bgImage = 'assets/category images/Plain theme/3.jpg';
   RxList<String> selectCatList = <String>[].obs;
-  var selectedFont =GoogleFonts.lato();
+  var selectedFont = GoogleFonts.lato();
   Color selectedColor = Colors.white;
-  final DatabaseHelper _databaseHelper = DatabaseHelper();
+
+  void selectedTheme (String theme)
+  {
+    bgImage = theme;
+  }
+
+  void colorPick(int index) {
+    selectedColor = colors[index]['color'];
+  }
 
   void selectCategory(String category) {
     selectCatList.clear();
@@ -38,7 +41,9 @@ class QuotesController extends GetxController {
     if (selectCatList.isEmpty) {
       quotes(allQuotes);
     } else {
-      List<QuoteModal> filteredQuotes = allQuotes.where((quote) => selectCatList.contains(quote.category)).toList();
+      List<QuoteModal> filteredQuotes = allQuotes
+          .where((quote) => selectCatList.contains(quote.category))
+          .toList();
       print('Filtered Quotes: $filteredQuotes');
       quotes(filteredQuotes);
     }
@@ -48,6 +53,9 @@ class QuotesController extends GetxController {
   void onInit() {
     super.onInit();
     fetchData();
+    initDb();
+    readFavouriteQuotes();
+    updateQuotesWithLikes();
   }
 
   void fetchData() async {
@@ -69,40 +77,96 @@ class QuotesController extends GetxController {
     }
   }
 
-  void toggleLike(QuoteModal quote, int index) async {
-    if (likedQuotes.any((liked) => liked.quote == quote.quote)) {
-      likedQuotes.removeWhere((liked) => liked.quote == quote.quote);
-      await _databaseHelper.deleteLikedQuote(quote.quote);
-    } else {
-      likedQuotes.add(quote);
-      await _databaseHelper.insertLikedQuote(quote);
-    }
-
-    if (quotes[index].isLiked == "1") {
-      quotes[index].isLiked = "0";
-    } else {
-      quotes[index].isLiked = "1";
-    }
-    update();
-    quotes.refresh();
-    print(quotes[index].isLiked);
+  Future<void> initDb() async {
+    await DatabaseHelper.databaseHelper.database;
   }
 
-  void loadLikedQuotes() async {
-    List<QuoteModal> likedQuotesFromDb = await _databaseHelper.getLikedQuotes();
-    likedQuotes.value = likedQuotesFromDb;
+  Future<void> insertFavouriteQuotes(QuoteModal quote, int index) async {
+    bool isAlreadyAdd = await DatabaseHelper.databaseHelper.isQuoteLiked(quote.quote);
+
+    if (isAlreadyAdd) {
+      // If the quote is already liked, remove it from favorites
+      await removeFavouriteQuotes(quote, index);
+    } else {
+      // If the quote is not already liked, add it to favorites
+      quote.isLiked = '1';
+      quotes[index].isLiked = '1';
+      quotes.refresh(); // Update the quotes list in the UI
+
+      await DatabaseHelper.databaseHelper.insertLikedQuote(
+        quote.category,
+        quote.quote,
+        quote.author,
+        quote.isLiked,
+      );
+
+      Get.snackbar(
+        "Success",
+        "Quote added to favorites!",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: const Color(0xff404040),
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(16.0),
+        borderRadius: 8,
+        icon: const Icon(
+          Icons.check_circle,
+          color: Colors.green,
+        ),
+        duration: const Duration(seconds: 2),
+      );
+    }
+
+    // Re-read the favorite quotes to refresh the liked quotes list
+    await readFavouriteQuotes();
   }
 
-  // Group liked quotes by category
-  Map<String, List<QuoteModal>> get likedQuotesByCategory {
-    var groupedQuotes = <String, List<QuoteModal>>{};
-    for (var quote in likedQuotes) {
-      if (groupedQuotes.containsKey(quote.category)) {
-        groupedQuotes[quote.category]!.add(quote);
+  Future<void> removeFavouriteQuotes(QuoteModal quote, int index) async {
+    quote.isLiked = '0'; // Mark the quote as disliked
+    quotes[index].isLiked = '0'; // Update the list with the disliked status
+    quotes.refresh(); // Refresh the quotes list in the UI
+
+    // Delete the quote from the favorites database by its ID
+    await DatabaseHelper.databaseHelper.deleteLikedQuote(quote.id!);
+
+    Get.snackbar(
+      "Removed",
+      "Quote removed from favorites!",
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: const Color(0xff404040),
+      colorText: Colors.white,
+      margin: const EdgeInsets.all(16.0),
+      borderRadius: 8,
+      icon: const Icon(
+        Icons.delete_outline,
+        color: Colors.red,
+      ),
+      duration: const Duration(seconds: 2),
+    );
+
+    // Re-read the favorite quotes to refresh the liked quotes list
+    await readFavouriteQuotes();
+  }
+
+  void updateQuotesWithLikes() {
+    // Iterate through all quotes and update their `isLiked` status based on the liked quotes
+    for (var quote in allQuotes) {
+      if (likedQuotes.any((likedQuote) => likedQuote.quote == quote.quote)) {
+        quote.isLiked = '1';
       } else {
-        groupedQuotes[quote.category] = [quote];
+        quote.isLiked = '0';
       }
     }
-    return groupedQuotes;
+    quotes(allQuotes);
+    quotes.refresh(); // Refresh the quotes list to update the UI
   }
+
+  Future<void> readFavouriteQuotes() async {
+    likedQuotes.value = await DatabaseHelper.databaseHelper.readLikedQuotes();
+  }
+
+  Future<void> deleteFavouriteQuotes(int id) async {
+    await DatabaseHelper.databaseHelper.deleteLikedQuote(id);
+    await readFavouriteQuotes();
+  }
+
 }

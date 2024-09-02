@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 
 import '../../Controller/controller.dart';
@@ -100,6 +103,74 @@ class TextEditingPage extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: w * 0.066),
               ),
               SizedBox(height: h * 0.02),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) => SimpleDialog(
+                            title: const Text(
+                              'Pick Color',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            children: [
+                              HueRingPicker(
+                                pickerColor: controller.selectedColor,
+                                onColorChanged: (value) {
+                                  controller.selectedColor = value;
+                                },
+                              ),
+                              Align(
+                                  alignment:
+                                  Alignment.bottomRight,
+                                  child: Padding(
+                                    padding:
+                                    const EdgeInsets.only(
+                                        right: 20.0),
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          'Save',
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontSize: 20),
+                                        ),),
+                                  ),),
+                            ],
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        height: 50,
+                        width: 50,
+                        decoration: const BoxDecoration(
+
+                            shape: BoxShape.circle),
+                      ),
+                    ),
+                    InkWell(
+                        onTap: () {
+
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                              color: controller.selectedColor,
+                              shape: BoxShape.circle),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,

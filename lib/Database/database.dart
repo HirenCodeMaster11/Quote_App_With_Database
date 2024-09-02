@@ -3,16 +3,16 @@ import 'package:sqflite/sqflite.dart';
 import '../Modal/modal.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
-  factory DatabaseHelper() => _instance;
-  DatabaseHelper._internal();
+  static final DatabaseHelper databaseHelper = DatabaseHelper._();
 
-  static Database? _database;
+  DatabaseHelper._();
+
+  Database? _db;
 
   Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
+    if (_db != null) return _db!;
+    _db = await _initDatabase();
+    return _db!;
   }
 
   Future<Database> _initDatabase() async {
@@ -25,7 +25,8 @@ class DatabaseHelper {
       onCreate: (db, version) {
         return db.execute(
           '''
-          CREATE TABLE likedQuotes (
+          CREATE TABLE quotes (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
             category TEXT,
             quote TEXT,
             author TEXT,
@@ -37,30 +38,43 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> insertLikedQuote(QuoteModal quote) async {
+  Future<int> insertLikedQuote(
+      String category, String quote, String author, String isLiked) async {
     final db = await database;
-    await db.insert(
-      'likedQuotes',
-      quote.toJson(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+    String sql = '''
+    INSERT INTO quotes (category, quote, author, isLiked)
+    VALUES (?, ?, ?, ?)
+    ''';
+    List args = [category, quote, author, isLiked];
+    return await db.rawInsert(sql, args);
+  }
+
+  Future readLikedQuotes() async {
+    final db = await database;
+    String sql = '''
+    SELECT * FROM quotes
+    ''';
+    final map = await db.rawQuery(sql);
+    return List.generate(
+      map.length,
+      (index) => QuoteModal.fromJson(map[index]),
     );
   }
 
-  Future<void> deleteLikedQuote(String quote) async {
+  Future<int> deleteLikedQuote(int id) async {
     final db = await database;
-    await db.delete(
-      'likedQuotes',
-      where: 'quote = ?',
-      whereArgs: [quote],
-    );
+    String sql = '''
+    DELETE FROM quotes WHERE id = ?
+    ''';
+    return await db.rawDelete(sql, [id]);
   }
 
-  Future<List<QuoteModal>> getLikedQuotes() async {
+  Future<bool> isQuoteLiked(String quote) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('likedQuotes');
-
-    return List.generate(maps.length, (i) {
-      return QuoteModal.fromJson(maps[i]);
-    });
+    String sql = '''
+  SELECT * FROM quotes WHERE quote = ?
+  ''';
+    final result = await db.rawQuery(sql, [quote]);
+    return result.isNotEmpty;
   }
 }

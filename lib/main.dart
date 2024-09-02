@@ -28,7 +28,7 @@ class QuoteApp extends StatelessWidget {
         GetPage(name: '/home', page: () => HomePage()),
         GetPage(name: '/theme', page: () => ThemePage()),
         GetPage(name: '/cat', page: () => CategoryPage(),),
-        GetPage(name: '/fav', page: () => FavoritePage()),
+        GetPage(name: '/fav', page: () => LikedQuotesScreen()),
         GetPage(name: '/edt', page: () => TextEditingPage()),
       ],
     );
