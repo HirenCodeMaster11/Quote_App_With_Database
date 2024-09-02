@@ -22,7 +22,7 @@ A new Flutter project.
 <h2 align="center">3. Quote App Home Screen </h2>
 
 <div align="center">
-  <img height="550"  src="https://github.com/user-attachments/assets/1da054ef-930b-4222-b1e7-ac91c74df883" />
+  <img height="550"  src="https://github.com/user-attachments/assets/2b9258d7-1499-4213-8056-af00e327e42f" />
 </div>
 <div align="center">
 <a href="https://github.com/HirenCodeMaster11/Quote_App_With_Database/blob/master/lib/View/Home%20Page/home.dart">-> 📂 Go To Dart File 📂 <-</a>
