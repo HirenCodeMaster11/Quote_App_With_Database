@@ -58,7 +58,7 @@ A new Flutter project.
 <h2 align="center">7. Quote App Text Editing Screen </h2>
 
 <div align="center">
-  <img height="550"  src="https://github.com/user-attachments/assets/63bc27cc-439c-4309-a9e8-0804cf20da60" />
+  <img height="550"  src="https://github.com/user-attachments/assets/966c31fc-28d9-4454-93be-e4b4e3a14d36" />
 </div>
 <div align="center">
 <a href="https://github.com/HirenCodeMaster11/Quote_App_With_Database/blob/master/lib/View/TextEditing%20Page/txtEdit%20Page.dart">-> 📂 Go To Dart File 📂 <-</a>
