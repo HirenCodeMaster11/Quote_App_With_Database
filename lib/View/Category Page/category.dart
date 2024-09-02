@@ -63,7 +63,7 @@ class CategoryPage extends StatelessWidget {
                               'Favorite quotes',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: w * 0.062,
+                                fontSize: w * 0.058,
                               ),
                             ),
                             Icon(
@@ -195,11 +195,11 @@ class CategoryPage extends StatelessWidget {
             title,
             style: TextStyle(
               color: Colors.white,
-              fontSize: w * 0.066,
+              fontSize: w * 0.05,
               fontWeight: FontWeight.w500,
             ),
           ),
-        SizedBox(height: 10),
+        SizedBox(height: 2),
         Container(
           decoration: BoxDecoration(
             color: const Color(0xff344050),
@@ -222,7 +222,7 @@ class CategoryPage extends StatelessWidget {
                           category,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: w * 0.062,
+                            fontSize: w * 0.058,
                           ),
                         ),
                         const Icon(

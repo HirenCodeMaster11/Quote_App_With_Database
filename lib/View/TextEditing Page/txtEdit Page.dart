@@ -55,6 +55,7 @@ class TextEditingPage extends StatelessWidget {
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
+                alignment: WrapAlignment.center,
                 children: fonts.map((fontMap) {
                   String fontName = fontMap.keys.first;
                   TextStyle fontStyle = fontMap[fontName]!;
@@ -64,7 +65,7 @@ class TextEditingPage extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
+                      padding: const EdgeInsets.only(right: 8.0,bottom: 6),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
@@ -82,11 +83,14 @@ class TextEditingPage extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                fontName,
-                                style: fontStyle.copyWith(
-                                  fontSize: w * 0.05,
-                                  color: Colors.white,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  fontName,
+                                  style: fontStyle.copyWith(
+                                    fontSize: w * 0.05,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ],
@@ -103,77 +107,10 @@ class TextEditingPage extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: w * 0.066),
               ),
               SizedBox(height: h * 0.02),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) => SimpleDialog(
-                            title: const Text(
-                              'Pick Color',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            children: [
-                              HueRingPicker(
-                                pickerColor: controller.selectedColor,
-                                onColorChanged: (value) {
-                                  controller.selectedColor = value;
-                                },
-                              ),
-                              Align(
-                                  alignment:
-                                  Alignment.bottomRight,
-                                  child: Padding(
-                                    padding:
-                                    const EdgeInsets.only(
-                                        right: 20.0),
-                                    child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text(
-                                          'Save',
-                                          style: TextStyle(
-                                              color: Colors.blue,
-                                              fontSize: 20),
-                                        ),),
-                                  ),),
-                            ],
-                          ),
-                        );
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        height: 50,
-                        width: 50,
-                        decoration: const BoxDecoration(
-
-                            shape: BoxShape.circle),
-                      ),
-                    ),
-                    InkWell(
-                        onTap: () {
-
-                        },
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              color: controller.selectedColor,
-                              shape: BoxShape.circle),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
+                alignment: WrapAlignment.center,
                 children: colors.map((colorMap) {
                   return GestureDetector(
                     onTap: () {
@@ -181,7 +118,7 @@ class TextEditingPage extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
+                      padding: const EdgeInsets.only(right: 8.0,bottom: 6),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),

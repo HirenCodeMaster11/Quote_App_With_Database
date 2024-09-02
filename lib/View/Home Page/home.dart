@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
                             quote.category,
                             style: controller.selectedFont.copyWith(
                               color: controller.selectedColor,
-                              fontSize: w * 0.1,
+                              fontSize: w * 0.09,
                             ),
                           ),
                           SizedBox(height: h * 0.04),
@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
                             textAlign: TextAlign.center,
                             style: controller.selectedFont.copyWith(
                               color: controller.selectedColor,
-                              fontSize: w * 0.1,
+                              fontSize: w * 0.09,
                             ),
                           ),
                           SizedBox(height: h * 0.03),
@@ -61,7 +61,7 @@ class HomePage extends StatelessWidget {
                             textAlign: TextAlign.center,
                             style: controller.selectedFont.copyWith(
                               color: controller.selectedColor,
-                              fontSize: w * 0.1,
+                              fontSize: w * 0.09,
                             ),
                           ),
                           SizedBox(height: h * 0.05),

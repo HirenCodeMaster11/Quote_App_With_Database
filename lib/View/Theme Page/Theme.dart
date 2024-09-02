@@ -78,14 +78,14 @@ class ThemePage extends StatelessWidget {
               title,
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: MediaQuery.of(context).size.width * 0.068,
+                  fontSize: MediaQuery.of(context).size.width * 0.06,
                   fontWeight: FontWeight.w500),
             ),
             Text(
               'View all',
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: MediaQuery.of(context).size.width * 0.057,
+                  fontSize: MediaQuery.of(context).size.width * 0.048,
                   fontWeight: FontWeight.w400),
             )
           ],

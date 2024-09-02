@@ -64,9 +64,9 @@ class QuotesController extends GetxController {
       List<QuoteModal>? result = await ApiHelper.apiHelper.fetchData();
       if (result != null) {
         result.shuffle();
-        allQuotes(result); // Store all fetched quotes
-        quotes(result); // Initially display all quotes
-        print('Fetched Quotes: $result'); // Debugging line
+        allQuotes(result);
+        quotes(result);
+        print('Fetched Quotes: $result');
       } else {
         print('Error: No result from API');
       }
@@ -85,13 +85,12 @@ class QuotesController extends GetxController {
     bool isAlreadyAdd = await DatabaseHelper.databaseHelper.isQuoteLiked(quote.quote);
 
     if (isAlreadyAdd) {
-      // If the quote is already liked, remove it from favorites
       await removeFavouriteQuotes(quote, index);
     } else {
-      // If the quote is not already liked, add it to favorites
+
       quote.isLiked = '1';
       quotes[index].isLiked = '1';
-      quotes.refresh(); // Update the quotes list in the UI
+      quotes.refresh();
 
       await DatabaseHelper.databaseHelper.insertLikedQuote(
         quote.category,
@@ -103,7 +102,7 @@ class QuotesController extends GetxController {
       Get.snackbar(
         "Success",
         "Quote added to favorites!",
-        snackPosition: SnackPosition.TOP,
+        snackPosition: SnackPosition.BOTTOM,
         backgroundColor: const Color(0xff404040),
         colorText: Colors.white,
         margin: const EdgeInsets.all(16.0),
@@ -115,40 +114,35 @@ class QuotesController extends GetxController {
         duration: const Duration(seconds: 2),
       );
     }
-
-    // Re-read the favorite quotes to refresh the liked quotes list
     await readFavouriteQuotes();
   }
 
   Future<void> removeFavouriteQuotes(QuoteModal quote, int index) async {
-    quote.isLiked = '0'; // Mark the quote as disliked
-    quotes[index].isLiked = '0'; // Update the list with the disliked status
-    quotes.refresh(); // Refresh the quotes list in the UI
+    quote.isLiked = '0';
+    quotes[index].isLiked = '0';
+    quotes.refresh();
 
-    // Delete the quote from the favorites database by its ID
     await DatabaseHelper.databaseHelper.deleteLikedQuote(quote.id!);
 
     Get.snackbar(
       "Removed",
-      "Quote removed from favorites!",
-      snackPosition: SnackPosition.TOP,
+      "Quote favorites!",
+      snackPosition: SnackPosition.BOTTOM,
       backgroundColor: const Color(0xff404040),
       colorText: Colors.white,
       margin: const EdgeInsets.all(16.0),
       borderRadius: 8,
       icon: const Icon(
-        Icons.delete_outline,
+        Icons.favorite_border,
         color: Colors.red,
       ),
       duration: const Duration(seconds: 2),
     );
 
-    // Re-read the favorite quotes to refresh the liked quotes list
     await readFavouriteQuotes();
   }
 
   void updateQuotesWithLikes() {
-    // Iterate through all quotes and update their `isLiked` status based on the liked quotes
     for (var quote in allQuotes) {
       if (likedQuotes.any((likedQuote) => likedQuote.quote == quote.quote)) {
         quote.isLiked = '1';
@@ -157,7 +151,7 @@ class QuotesController extends GetxController {
       }
     }
     quotes(allQuotes);
-    quotes.refresh(); // Refresh the quotes list to update the UI
+    quotes.refresh();
   }
 
   Future<void> readFavouriteQuotes() async {
@@ -166,6 +160,20 @@ class QuotesController extends GetxController {
 
   Future<void> deleteFavouriteQuotes(int id) async {
     await DatabaseHelper.databaseHelper.deleteLikedQuote(id);
+    Get.snackbar(
+      "Removed",
+      "Quote removed from favorites!",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: const Color(0xff404040),
+      colorText: Colors.white,
+      margin: const EdgeInsets.all(16.0),
+      borderRadius: 8,
+      icon: const Icon(
+        Icons.delete,
+        color: Colors.red,
+      ),
+      duration: const Duration(seconds: 2),
+    );
     await readFavouriteQuotes();
   }
 
